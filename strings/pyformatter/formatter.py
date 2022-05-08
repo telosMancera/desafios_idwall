@@ -14,13 +14,22 @@ class StringFormatter:
 
         # Get original lines
         lines = []
-        for line in text.strip().split("\n"):
+        for line in text.split("\n"):
             words = line.split()
-            lines.append(words)
+            if not words:
+                lines.append("")
+
+            else:
+                lines.append(words)
 
         # Get the new lines according to limit
         new_lines = []
         for line in lines:
+            if not line:
+                new_lines.append("")
+
+                continue
+
             new_line = []
             for word in line:
                 if len(" ".join([*new_line, word])) <= self._limit:
@@ -41,6 +50,11 @@ class StringFormatter:
         # Justify the lines
         justified_lines = []
         for line in new_lines:
+            if not line:
+                justified_lines.append("")
+
+                continue
+
             free_space = self._limit - sum(len(word) for word in line)
             if not free_space:
                 justified_lines.append(" ".join(line))
@@ -80,20 +94,3 @@ class StringFormatter:
             justified_lines.append(justified_line)
 
         return "\n".join(justified_lines)
-
-
-if __name__ == "__main__":
-    formatter = StringFormatter(40)
-    # formatted = formatter.format(
-    #     "In the beginning God     created the heavens and the earth. Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters."
-    # )
-
-    text = """
-In the beginning God created the heavens and the earth. Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.
-
-And God said, "Let there be light," and there was light. God saw that the light was good, and he separated the light from the darkness. God called the light "day," and the darkness he called "night." And there was evening, and there was morning - the first day.
-    """
-
-    print(formatter.format(text))
-    print("")
-    print(formatter.format(text, justify=True))
