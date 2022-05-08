@@ -89,7 +89,7 @@ def store_formatted_text(formatted_text: str, script_params: dict) -> None:
     print("Storing into file...")
 
     folder = dirname(script_params["file"])
-    if not exists(folder):
+    if folder and not exists(folder):
         makedirs(folder)
 
     with open(script_params["file"], "w") as file:
