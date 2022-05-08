@@ -1,6 +1,5 @@
 import sys
 
-from pyformatter.formatter import StringFormatter
 from pyformatter.functions import (
     format_text,
     parse_execution_arguments,

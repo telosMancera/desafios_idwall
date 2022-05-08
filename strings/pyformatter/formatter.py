@@ -13,6 +13,22 @@ class StringFormatter:
         """
 
         # Get original lines
+        lines = self._get_lines(text)
+
+        # Get the new lines according to limit
+        new_lines = self._get_new_lines(lines)
+
+        # Build the final string
+        if not justify:
+            return "\n".join(" ".join(line) for line in new_lines)
+
+        # Justify the lines
+        justified_lines = self._justify_lines(new_lines)
+
+        return "\n".join(justified_lines)
+
+    @staticmethod
+    def _get_lines(text: str) -> list[list]:
         lines = []
         for line in text.split("\n"):
             words = line.split()
@@ -22,7 +38,9 @@ class StringFormatter:
             else:
                 lines.append(words)
 
-        # Get the new lines according to limit
+        return lines
+
+    def _get_new_lines(self, lines: list[list]) -> list[list]:
         new_lines = []
         for line in lines:
             if not line:
@@ -43,11 +61,9 @@ class StringFormatter:
             if new_line:
                 new_lines.append(new_line)
 
-        # Build the final string
-        if not justify:
-            return "\n".join(" ".join(line) for line in new_lines)
+        return new_lines
 
-        # Justify the lines
+    def _justify_lines(self, new_lines: list[list]) -> list[str]:
         justified_lines = []
         for line in new_lines:
             if not line:
@@ -93,4 +109,4 @@ class StringFormatter:
 
             justified_lines.append(justified_line)
 
-        return "\n".join(justified_lines)
+        return justified_lines
