@@ -1,6 +1,6 @@
 PROGRAM_NAME = "PyFormatter"
-PROGRAM_DESCRIPTION = """
-Receives a text as input and prints it formatted.
+PROGRAM_DESCRIPTION = """\
+Receives a text as input and prints it formatted.\
 """
 
 

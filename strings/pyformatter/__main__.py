@@ -1,22 +1,20 @@
+import sys
+
 from pyformatter.formatter import StringFormatter
-from pyformatter.functions import parse_execution_arguments
+from pyformatter.functions import (
+    format_text,
+    parse_execution_arguments,
+    store_formatted_text,
+)
 
 
-def main() -> None:
-    execution_arguments = parse_execution_arguments()
-    print(execution_arguments)
-    print("")
+def main(execution_arguments: list) -> None:
+    script_params = parse_execution_arguments(execution_arguments)
+    formatted_text = format_text(script_params)
 
-    formatter = StringFormatter(execution_arguments["limit"])
-    formatted = formatter.format(
-        execution_arguments["text"], justify=execution_arguments["justify"]
-    )
-    print(formatted)
-
-    if execution_arguments["file"]:
-        with open(execution_arguments["file"], "w") as file:
-            file.write(formatted)
+    if script_params["file"]:
+        store_formatted_text(formatted_text, script_params)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

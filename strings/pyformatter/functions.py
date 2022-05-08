@@ -1,5 +1,8 @@
 from argparse import ArgumentParser
+from os import makedirs
+from os.path import dirname, exists
 
+from pyformatter.formatter import StringFormatter
 from pyformatter.settings import (
     INPUT_JUSTIFY_DEFAULT,
     INPUT_LIMIT_DEFAULT,
@@ -8,7 +11,7 @@ from pyformatter.settings import (
 )
 
 
-def parse_execution_arguments() -> dict:
+def parse_execution_arguments(execution_arguments: list) -> dict:
 
     """
     Parses execution arguments passed via command line.
@@ -52,4 +55,42 @@ def parse_execution_arguments() -> dict:
         help="File where the formatted text will be stored.",
     )
 
-    return vars(parser.parse_args())
+    script_params = vars(parser.parse_args(execution_arguments))
+    print(f"Execution arguments : {script_params}")
+
+    return script_params
+
+
+def format_text(script_params: dict) -> str:
+
+    """
+    Formats the text.
+    """
+
+    print("Formatting the text...")
+
+    formatter = StringFormatter(script_params["limit"])
+    formatted = formatter.format(
+        script_params["text"], justify=script_params["justify"]
+    )
+
+    print("Result :\n")
+    print(formatted)
+
+    return formatted
+
+
+def store_formatted_text(formatted_text: str, script_params: dict) -> None:
+
+    """
+    Stores the formatted text into passed output file.
+    """
+
+    print("Storing into file...")
+
+    folder = dirname(script_params["file"])
+    if not exists(folder):
+        makedirs(folder)
+
+    with open(script_params["file"], "w") as file:
+        file.write(formatted_text)
