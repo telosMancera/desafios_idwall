@@ -1,5 +1,5 @@
 import pytest
-from pyformatter.settings import INPUT_JUSTIFY_DEFAULT, INPUT_LIMIT_DEFAULT
+from pyformatter.settings import INPUT_JUSTIFY_DEFAULT
 
 
 @pytest.fixture(name="text_example")
@@ -34,19 +34,19 @@ def fixture_execution_arguments_example(
 def fixture_script_params_example(text_example: str, output_file_example: str) -> dict:
     return {
         "text": text_example,
-        "limit": INPUT_LIMIT_DEFAULT,
+        "limit": 40,
         "justify": not INPUT_JUSTIFY_DEFAULT,
         "file": output_file_example,
     }
 
 
-@pytest.fixture(name="formatted_example")
-def fixture_formatted_example() -> str:
+@pytest.fixture(name="formatted_text_example")
+def fixture_formatted_text_example() -> str:
     with open("output_parte1.txt", "r") as file:
         return file.read()
 
 
-@pytest.fixture(name="justified_example")
-def fixture_justified_example() -> str:
+@pytest.fixture(name="justified_text_example")
+def fixture_justified_text_example() -> str:
     with open("output-parte2.txt", "r") as file:
         return file.read()

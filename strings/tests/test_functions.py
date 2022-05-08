@@ -1,5 +1,12 @@
+from os import remove, rmdir
+from os.path import basename, exists, join
+
 import pytest
-from pyformatter.functions import parse_execution_arguments
+from pyformatter.functions import (
+    format_text,
+    parse_execution_arguments,
+    store_formatted_text,
+)
 from pyformatter.settings import INPUT_JUSTIFY_DEFAULT, INPUT_LIMIT_DEFAULT
 
 
@@ -26,7 +33,7 @@ class TestParseExecutionArguments:
             parse_execution_arguments(execution_arguments_example)
 
     @pytest.mark.parametrize(
-        "argument_pos, field, value",
+        "argument_pos, field, expected_value",
         (
             ((1, 2), "limit", INPUT_LIMIT_DEFAULT),
             ((3,), "justify", INPUT_JUSTIFY_DEFAULT),
@@ -38,7 +45,7 @@ class TestParseExecutionArguments:
         execution_arguments_example: list,
         argument_pos: tuple,
         field: str,
-        value: any,
+        expected_value: any,
     ) -> None:
         execution_arguments = [
             value
@@ -49,4 +56,55 @@ class TestParseExecutionArguments:
         script_params = parse_execution_arguments(execution_arguments)
 
         assert field in script_params
-        assert script_params[field] == value
+        assert script_params[field] == expected_value
+
+
+class TestFormatText:
+    def test_format(
+        self, script_params_example: dict, formatted_text_example: str
+    ) -> None:
+        script_params_example["justify"] = False
+
+        assert format_text(script_params_example) == formatted_text_example
+
+    def test_justify(
+        self, script_params_example: dict, justified_text_example: str
+    ) -> None:
+        script_params_example["justify"] = True
+
+        assert format_text(script_params_example) == justified_text_example
+
+
+class TestStoreFormattedText:
+    def test_in_same_folder(
+        self,
+        formatted_text_example: str,
+        script_params_example: dict,
+        output_file_example: str,
+    ) -> None:
+        script_params_example["file"] = basename(output_file_example)
+
+        store_formatted_text(formatted_text_example, script_params_example)
+
+        assert exists(script_params_example["file"])
+        with open(script_params_example["file"], "r") as file:
+            assert file.read() == formatted_text_example
+
+        remove(script_params_example["file"])
+
+    def test_in_different_folder(
+        self,
+        formatted_text_example: str,
+        script_params_example: dict,
+        output_file_example: str,
+    ) -> None:
+        script_params_example["file"] = join("folder", basename(output_file_example))
+
+        store_formatted_text(formatted_text_example, script_params_example)
+
+        assert exists(script_params_example["file"])
+        with open(script_params_example["file"], "r") as file:
+            assert file.read() == formatted_text_example
+
+        remove(script_params_example["file"])
+        rmdir("folder")
