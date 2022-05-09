@@ -1,0 +1,15 @@
+-r base.txt
+
+black
+pylint
+
+ipdb
+
+pytest
+pytest-black
+pytest-clarity
+pytest-cov
+pytest-env
+pytest-pylint
+pytest-pythonpath
+pytest-sugar
