@@ -3,6 +3,8 @@
 black
 pylint
 
+ipdb
+
 pytest
 pytest-black
 pytest-clarity
