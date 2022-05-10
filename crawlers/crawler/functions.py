@@ -1,11 +1,13 @@
 from argparse import ArgumentParser
 
+from crawler.crawlers.reddit import RedditCrawler
 from crawler.enums import PeriodEnum
 from crawler.settings import (
     INPUT_PERIOD_DEFAULT,
     INPUT_QUANTITY_DEFAULT,
     INPUT_UPVOTES_DEFAULT,
 )
+from crawler.utils import print_pretty_object
 
 PROGRAM_NAME = "Crawler"
 PROGRAM_DESCRIPTION = """\
@@ -53,12 +55,52 @@ def parse_execution_arguments(execution_arguments: list) -> dict:
     _validate_script_params(script_params)
     _format_script_params(script_params)
 
-    print(f"Params :")
-    biggest_key_length = max(len(key) for key in script_params)
-    for key, value in script_params.items():
-        print(f"* {key.capitalize():>{biggest_key_length}} : {value}")
+    print_pretty_object(script_params, header="Params :")
 
     return script_params
+
+
+def list_top_threads(script_params: dict) -> list[dict]:
+
+    """
+    Lists the top threads.
+    """
+
+    print("Listing the top threads...")
+
+    # List top threads for each subreddit
+    top_threads = []
+    for subreddit in script_params["subreddits"]:
+        crawler = RedditCrawler(subreddit)
+        _top_threads = crawler.list_top_threads(
+            script_params["quantity"],
+            period=script_params["period"],
+            upvotes=script_params["upvotes"],
+        )
+
+        top_threads.extend(_top_threads)
+
+    # List top threads between all of them
+    top_threads = sorted(
+        top_threads, key=lambda thread: thread["upvotes"], reverse=True
+    )[: script_params["quantity"]]
+
+    print("Listed!")
+
+    return top_threads
+
+
+def show_results(top_threads: list, script_params: dict) -> None:
+
+    """
+    Shows the top threads.
+    """
+
+    quantity = script_params["quantity"]
+    print(f"\nThe {quantity} top threads are :\n")
+    for thread in top_threads:
+        print_pretty_object(thread)
+        print("")
 
 
 def _validate_script_params(script_params: dict) -> None:

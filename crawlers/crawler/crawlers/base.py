@@ -34,7 +34,7 @@ class BaseCrawler:
                 f"{key}={value}" for key, value in query_params.items()
             )
 
-        print(f"Getting soup from {url}")
+        # print(f"Getting soup from {url}")
 
         headers = {
             "User-Agent": get_random_user_agent(),
@@ -43,6 +43,6 @@ class BaseCrawler:
         proxy = get_random_proxy()
         response = get(url, headers=headers, proxies=proxy)
 
-        print("Got!")
+        # print("Got!")
 
         return BeautifulSoup(response.content, SOUP_FEATURES)

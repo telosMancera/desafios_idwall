@@ -30,6 +30,8 @@ def _get_threads(soup: BeautifulSoup) -> list[dict]:
 
 class RedditCrawler(BaseCrawler):
     def __init__(self, subreddit: str) -> None:
+        self._subreddit = subreddit
+
         super().__init__(f"{_REDDIT_BASE_URL}/r/{subreddit}/")
 
     def list_top_threads(
@@ -43,6 +45,8 @@ class RedditCrawler(BaseCrawler):
         """
         Lists the top threads.
         """
+
+        print(f"Listing top threads for {self._subreddit}...")
 
         top_threads = []
         after = None
@@ -59,7 +63,8 @@ class RedditCrawler(BaseCrawler):
             threads = _get_threads(soup)
 
             # Get next page
-            after = threads[-1]["after"]
+            for thread in threads:
+                after = thread.pop("after")  # it will store the after from last thread
 
             # Filter threads
             threads = [thread for thread in threads if thread["upvotes"] >= upvotes]
@@ -73,5 +78,7 @@ class RedditCrawler(BaseCrawler):
 
             else:
                 top_threads.extend(threads)
+
+        print(f"Found {len(top_threads)} with more than or equal to {upvotes} upvotes!")
 
         return top_threads
