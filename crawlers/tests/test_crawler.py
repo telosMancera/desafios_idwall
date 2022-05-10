@@ -5,4 +5,6 @@ class TestRedditCrawler:
     def test_success(self) -> None:
         crawler = RedditCrawler("cats")
 
-        crawler.list_top_threads(10)
+        top = crawler.list_top_threads(40, upvotes=200)
+
+        assert all(thread["upvotes"] >= 200 for thread in top)

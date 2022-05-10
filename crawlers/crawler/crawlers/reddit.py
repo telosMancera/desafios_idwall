@@ -6,11 +6,31 @@ from crawler.settings import INPUT_PERIOD_DEFAULT, INPUT_UPVOTES_DEFAULT
 _REDDIT_BASE_URL = "https://old.reddit.com"
 
 
+def _get_threads(soup: BeautifulSoup) -> list[dict]:
+    threads = []
+
+    threads_table = soup.find_all(id="siteTable")[0]
+    for thread_tag in threads_table.find_all(class_="thing"):
+        title_tag = thread_tag.find_all("a", class_="title")[0]
+        attrs = thread_tag.attrs
+
+        threads.append(
+            {
+                "title": title_tag.text,
+                "subreddit": f'/{attrs["data-subreddit-prefixed"]}',
+                "upvotes": int(attrs["data-score"]),
+                "link": attrs["data-url"],
+                "link_comments": attrs["data-permalink"],
+                "after": attrs["data-fullname"],  # used for pagination
+            }
+        )
+
+    return threads
+
+
 class RedditCrawler(BaseCrawler):
     def __init__(self, subreddit: str) -> None:
-        self._subreddit_url = f"{_REDDIT_BASE_URL}/r/{subreddit}/"
-
-        super().__init__(self._subreddit_url)
+        super().__init__(f"{_REDDIT_BASE_URL}/r/{subreddit}/")
 
     def list_top_threads(
         self,
@@ -24,14 +44,34 @@ class RedditCrawler(BaseCrawler):
         Lists the top threads.
         """
 
-        soup = self._get_soup_from_endpoint("/top/", sort="top", t=period)
+        top_threads = []
+        after = None
+        while (left_to_complete := quantity - len(top_threads)) > 0:
+            # Get threads
+            if after:
+                soup = self._get_soup_from_endpoint(
+                    "/top/", sort="top", t=period, after=after
+                )
 
-        with open("result.html", "w") as file:
-            file.write(str(soup))
+            else:
+                soup = self._get_soup_from_endpoint("/top/", sort="top", t=period)
 
-        # import ipdb
+            threads = _get_threads(soup)
 
-        # ipdb.set_trace()
+            # Get next page
+            after = threads[-1]["after"]
 
-    def _get_threads(self, soup: BeautifulSoup) -> list:
-        return []
+            # Filter threads
+            threads = [thread for thread in threads if thread["upvotes"] >= upvotes]
+            if not threads:
+                # No more threads with the minimum upvotes
+                break
+
+            # Store result
+            if left_to_complete < len(threads):
+                top_threads.extend(threads[:left_to_complete])
+
+            else:
+                top_threads.extend(threads)
+
+        return top_threads

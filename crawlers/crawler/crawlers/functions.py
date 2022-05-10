@@ -48,7 +48,7 @@ def generate_proxies() -> None:
     if exists(PROXIES_FILE):
         try:
             with open(PROXIES_FILE, "r") as file:
-                proxies = loads(file)
+                proxies = loads(file.read())
 
         except Exception:
             pass
