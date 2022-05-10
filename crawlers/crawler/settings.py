@@ -1,11 +1,7 @@
-from crawler.enums import ListTopThreadsPeriodEnum
+from crawler.enums import PeriodEnum
 
-PROGRAM_NAME = "Crawler"
-PROGRAM_DESCRIPTION = """\
-List the most highlighted threads in Reddit.\
-"""
-
+INPUT_QUANTITY_DEFAULT = 10
 INPUT_UPVOTES_DEFAULT = 5000
-INPUT_PERIOD_DEFAULT = ListTopThreadsPeriodEnum.PAST_24_HOURS.value
+INPUT_PERIOD_DEFAULT = PeriodEnum.PAST_24_HOURS.value
 
 SOUP_FEATURES = "html.parser"

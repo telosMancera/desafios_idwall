@@ -1,6 +1,16 @@
 from argparse import ArgumentParser
 
-from crawler.settings import INPUT_UPVOTES_DEFAULT, PROGRAM_DESCRIPTION, PROGRAM_NAME
+from crawler.enums import PeriodEnum
+from crawler.settings import (
+    INPUT_PERIOD_DEFAULT,
+    INPUT_QUANTITY_DEFAULT,
+    INPUT_UPVOTES_DEFAULT,
+)
+
+PROGRAM_NAME = "Crawler"
+PROGRAM_DESCRIPTION = """\
+List the most highlighted threads in Reddit.\
+"""
 
 
 def parse_execution_arguments(execution_arguments: list) -> dict:
@@ -19,6 +29,20 @@ def parse_execution_arguments(execution_arguments: list) -> dict:
     )
 
     parser.add_argument(
+        "--quantity",
+        type=int,
+        default=INPUT_QUANTITY_DEFAULT,
+        help=f"Number of results to show. Defaults to {INPUT_QUANTITY_DEFAULT}",
+    )
+
+    parser.add_argument(
+        "--period",
+        type=str,
+        default=INPUT_PERIOD_DEFAULT,
+        help=f"Search period, must be one of {PeriodEnum.values()}  Defaults to {INPUT_QUANTITY_DEFAULT}",
+    )
+
+    parser.add_argument(
         "--upvotes",
         type=int,
         default=INPUT_UPVOTES_DEFAULT,
@@ -26,6 +50,7 @@ def parse_execution_arguments(execution_arguments: list) -> dict:
     )
 
     script_params = vars(parser.parse_args(execution_arguments))
+    _validate_script_params(script_params)
     _format_script_params(script_params)
 
     print(f"Params :")
@@ -34,6 +59,13 @@ def parse_execution_arguments(execution_arguments: list) -> dict:
         print(f"* {key.capitalize():>{biggest_key_length}} : {value}")
 
     return script_params
+
+
+def _validate_script_params(script_params: dict) -> None:
+    # period
+    assert (
+        script_params["period"] in PeriodEnum.values()
+    ), f"Period must be one of {PeriodEnum.values()}"
 
 
 def _format_script_params(script_params: dict) -> None:

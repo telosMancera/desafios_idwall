@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from crawler.crawlers.base import BaseCrawler
-from crawler.enums import ListTopThreadsPeriodEnum
+from crawler.enums import PeriodEnum
 from crawler.settings import INPUT_PERIOD_DEFAULT, INPUT_UPVOTES_DEFAULT
 
 _REDDIT_BASE_URL = "https://old.reddit.com"
@@ -36,7 +36,7 @@ class RedditCrawler(BaseCrawler):
         self,
         quantity,
         *,
-        period: ListTopThreadsPeriodEnum = INPUT_PERIOD_DEFAULT,
+        period: PeriodEnum = INPUT_PERIOD_DEFAULT,
         upvotes: int = INPUT_UPVOTES_DEFAULT,
     ) -> list[dict]:
 
