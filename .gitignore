@@ -1,3 +1,11 @@
+# Applications
+.proxies
+sslproxies.org.html
+
+# Python
 .coverage*
 *pycache*
 venv*
+
+# VSCode
+.vscode

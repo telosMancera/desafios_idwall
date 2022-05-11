@@ -1,17 +1,19 @@
 import sys
 
-from crawler.cli.functions import (
+from crawler.functions import (
     list_top_threads,
     parse_execution_arguments,
-    show_results,
+    prettify_results,
 )
 
 
 def main(execution_arguments: list) -> None:
-    script_params = parse_execution_arguments(execution_arguments)
+    parsed_arguments = parse_execution_arguments(execution_arguments)
 
-    top_threads = list_top_threads(script_params)
-    show_results(top_threads, script_params)
+    top_threads = list_top_threads(parsed_arguments)
+
+    print("")
+    print(prettify_results(top_threads, parsed_arguments))
 
 
 if __name__ == "__main__":
