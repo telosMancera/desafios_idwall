@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 
 from crawler.crawlers.reddit import RedditCrawler
 from crawler.enums import PeriodEnum
+from crawler.exceptions import InvalidArgumentError
 from crawler.logs import get_logger
 from crawler.settings import (
     INPUT_PERIOD_DEFAULT,
@@ -116,9 +117,8 @@ def _parse_arguments(execution_arguments: list) -> dict[str, any]:
 
 def _validate_parsed_arguments(parsed_arguments: dict) -> None:
     # period
-    assert (
-        parsed_arguments["period"] in PeriodEnum.values()
-    ), f"Period must be one of {PeriodEnum.values()}"
+    if parsed_arguments["period"] not in PeriodEnum.values():
+        raise InvalidArgumentError(f"Period must be one of {PeriodEnum.values()}")
 
 
 def _format_parsed_arguments(parsed_arguments: dict) -> None:
