@@ -1,23 +1,33 @@
 from crawler.bot.decorators import command_handler
 from crawler.bot.settings import TELEGRAM_BOT_TOKEN
-from telegram import Update
-from telegram.ext import CallbackContext, Updater
+from crawler.exceptions import InvalidArgumentError
+from crawler.functions import (
+    list_top_threads,
+    parse_execution_arguments,
+    prettify_results,
+)
+from crawler.logs import get_logger
+from telegram.ext import Updater
 
-# Create the Updater and pass it your bot's token.
+logger = get_logger(__name__)
+
 updater = Updater(TELEGRAM_BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 
 @command_handler("start", dispatcher=dispatcher)
-def start(message: str, **_kwargs) -> str:
-    return "Vc enviou o comando start, parabéns seu imbecil!"
+def start(*_args, **_kwargs) -> str:
+    return "Welcome to TelosIdCrawler!"
 
 
-@command_handler("help", dispatcher=dispatcher)
-def help(_message: str, **_kwargs) -> str:
-    return "Oh agora vc mandou um help, quer um presente?"
+@command_handler("NadaPraFazer", dispatcher=dispatcher)
+def nothing_to_do(message: str, **_kwargs) -> str:
+    try:
+        parsed_arguments = parse_execution_arguments(message.split()[1:])
 
+    except SystemExit as exc:
+        raise Exception("ArgumentParser raised an error!") from exc
 
-@command_handler("dini", dispatcher=dispatcher)
-def dini(_message: str, **_kwargs) -> str:
-    return "Ah coisa mais gostosa desse mundo!!! S2"
+    top_threads = list_top_threads(parsed_arguments)
+
+    return prettify_results(top_threads, parsed_arguments)
