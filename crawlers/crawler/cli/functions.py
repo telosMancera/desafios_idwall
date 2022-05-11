@@ -56,6 +56,7 @@ def parse_execution_arguments(execution_arguments: list) -> dict:
     _format_script_params(script_params)
 
     print_pretty_object(script_params, header="Params :")
+    print("")
 
     return script_params
 

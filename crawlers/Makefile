@@ -1,17 +1,34 @@
+PYTHON_VERSION = 3.9
+
 VENV = venv
 VENV_DEVELOP = venv_develop
 
-.PHONY: $(VENV) $(VENV_DEVELOP)
 
-PYTHON_VERSION = 3.9
+install: install-all
 
-$(VENV):
+install-all:
 	-rm -rf $(VENV)
 	python$(PYTHON_VERSION) -m venv $(VENV)
 
-	$(VENV)/bin/pip install -r requirements/production.txt
+	$(VENV)/bin/pip install -r requirements/base.txt
+	$(VENV)/bin/pip install -r requirements/cli.txt
+	$(VENV)/bin/pip install -r requirements/bot.txt
 
-$(VENV_DEVELOP):
+install-cli:
+	-rm -rf $(VENV)
+	python$(PYTHON_VERSION) -m venv $(VENV)
+
+	$(VENV)/bin/pip install -r requirements/base.txt
+	$(VENV)/bin/pip install -r requirements/cli.txt
+
+install-bot:
+	-rm -rf $(VENV)
+	python$(PYTHON_VERSION) -m venv $(VENV)
+
+	$(VENV)/bin/pip install -r requirements/base.txt
+	$(VENV)/bin/pip install -r requirements/cli.txt
+
+develop:
 	-rm -rf $(VENV_DEVELOP)
 	python$(PYTHON_VERSION) -m venv $(VENV_DEVELOP)
 

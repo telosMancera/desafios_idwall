@@ -1,6 +1,10 @@
 import sys
 
-from crawler.functions import list_top_threads, parse_execution_arguments, show_results
+from crawler.cli.functions import (
+    list_top_threads,
+    parse_execution_arguments,
+    show_results,
+)
 
 
 def main(execution_arguments: list) -> None:
