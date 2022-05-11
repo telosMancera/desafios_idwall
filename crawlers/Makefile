@@ -1,7 +1,6 @@
 PYTHON_VERSION = 3.9
 
 VENV = venv
-VENV_DEVELOP = venv_develop
 
 
 install: install-all
@@ -29,7 +28,10 @@ install-bot:
 	$(VENV)/bin/pip install -r requirements/cli.txt
 
 develop:
-	-rm -rf $(VENV_DEVELOP)
-	python$(PYTHON_VERSION) -m venv $(VENV_DEVELOP)
+	-rm -rf $(VENV)
+	python$(PYTHON_VERSION) -m venv $(VENV)
 
-	$(VENV_DEVELOP)/bin/pip install -r requirements/development.txt
+	$(VENV)/bin/pip install -r requirements/development.txt
+
+test:
+	$(VENV)/bin/python -m pytest
