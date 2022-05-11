@@ -1,9 +1,8 @@
-from argparse import ArgumentParser
-
 from crawler.crawlers.reddit import RedditCrawler
 from crawler.enums import PeriodEnum
 from crawler.exceptions import InvalidArgumentError
 from crawler.logs import get_logger
+from crawler.parsers import ArgumentParser
 from crawler.settings import (
     INPUT_PERIOD_DEFAULT,
     INPUT_QUANTITY_DEFAULT,
@@ -20,13 +19,15 @@ List the most highlighted threads in Reddit.\
 logger = get_logger(__name__)
 
 
-def parse_execution_arguments(execution_arguments: list) -> dict:
+def parse_execution_arguments(
+    execution_arguments: list, *, prog: str = None, exit_on_error: bool = True
+) -> dict:
 
     """
     Parses execution arguments.
     """
 
-    parsed = _parse_arguments(execution_arguments)
+    parsed = _parse_arguments(execution_arguments, prog, exit_on_error)
 
     _validate_parsed_arguments(parsed)
     _format_parsed_arguments(parsed)
@@ -81,8 +82,16 @@ def prettify_results(top_threads: list, parsed_arguments: dict) -> str:
     return prettier
 
 
-def _parse_arguments(execution_arguments: list) -> dict[str, any]:
-    parser = ArgumentParser(prog=PROGRAM_NAME, description=PROGRAM_DESCRIPTION)
+def _parse_arguments(
+    execution_arguments: list, prog: str, exit_on_error: bool
+) -> dict[str, any]:
+    prog = prog or PROGRAM_NAME
+    parser = ArgumentParser(
+        prog=prog,
+        description=PROGRAM_DESCRIPTION,
+        add_help=(prog is None),
+        exit_on_error=exit_on_error,
+    )
 
     parser.add_argument(
         "subreddits",

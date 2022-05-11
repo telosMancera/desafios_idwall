@@ -22,11 +22,9 @@ def start(*_args, **_kwargs) -> str:
 
 @command_handler("NadaPraFazer", dispatcher=dispatcher)
 def nothing_to_do(message: str, **_kwargs) -> str:
-    try:
-        parsed_arguments = parse_execution_arguments(message.split()[1:])
-
-    except SystemExit as exc:
-        raise Exception("ArgumentParser raised an error!") from exc
+    parsed_arguments = parse_execution_arguments(
+        message.split()[1:], prog="/NadaPraFazer", exit_on_error=False
+    )
 
     top_threads = list_top_threads(parsed_arguments)
 
