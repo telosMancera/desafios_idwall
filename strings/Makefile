@@ -1,18 +1,19 @@
-VENV = venv
-VENV_DEVELOP = venv_develop
-
-.PHONY: $(VENV) $(VENV_DEVELOP)
-
 PYTHON_VERSION = 3.9
 
-$(VENV):
+VENV = venv
+
+
+install:
 	-rm -rf $(VENV)
 	python$(PYTHON_VERSION) -m venv $(VENV)
 
 	$(VENV)/bin/pip install -r requirements/production.txt
 
-$(VENV_DEVELOP):
-	-rm -rf $(VENV_DEVELOP)
-	python$(PYTHON_VERSION) -m venv $(VENV_DEVELOP)
+develop:
+	-rm -rf $(VENV)
+	python$(PYTHON_VERSION) -m venv $(VENV)
 
-	$(VENV_DEVELOP)/bin/pip install -r requirements/development.txt
+	$(VENV)/bin/pip install -r requirements/development.txt
+
+test:
+	$(VENV)/bin/python -m pytest
