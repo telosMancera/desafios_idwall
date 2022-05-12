@@ -1,10 +1,11 @@
 from functools import wraps
 from typing import Callable
 
-from crawler.exceptions import InvalidArgumentError
-from crawler.logs import get_logger
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, Dispatcher
+
+from crawler.exceptions import InvalidArgumentError
+from crawler.logs import get_logger
 
 logger = get_logger(__name__)
 

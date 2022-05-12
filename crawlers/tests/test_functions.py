@@ -1,4 +1,5 @@
 import pytest
+
 from crawler.functions import parse_execution_arguments
 from crawler.settings import (
     INPUT_PERIOD_DEFAULT,

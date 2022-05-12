@@ -10,10 +10,11 @@ from os.path import exists
 from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup
-from crawler.logs import get_logger
-from crawler.settings import SOUP_FEATURES
 from fake_useragent import UserAgent
 from IPython.display import clear_output
+
+from crawler.logs import get_logger
+from crawler.settings import SOUP_FEATURES
 
 logger = get_logger(__name__)
 

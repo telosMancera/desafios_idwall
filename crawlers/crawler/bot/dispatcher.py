@@ -1,13 +1,13 @@
+from telegram.ext import Updater
+
 from crawler.bot.decorators import command_handler
 from crawler.bot.settings import TELEGRAM_BOT_TOKEN
-from crawler.exceptions import InvalidArgumentError
 from crawler.functions import (
     list_top_threads,
     parse_execution_arguments,
     prettify_results,
 )
 from crawler.logs import get_logger
-from telegram.ext import Updater
 
 logger = get_logger(__name__)
 

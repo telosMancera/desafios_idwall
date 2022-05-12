@@ -2,6 +2,7 @@ from os import remove, rmdir
 from os.path import basename, exists, join
 
 import pytest
+
 from pyformatter.functions import (
     format_text,
     parse_execution_arguments,
